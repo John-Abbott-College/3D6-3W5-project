@@ -1,3 +1,5 @@
 build/
+.env
+.tools/
 instructor/dab-starter.zip
 toolchain.zip

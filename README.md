@@ -19,6 +19,17 @@ Browser (web/)  --fetch-->  DAB (http://localhost:5000)  --SQL-->  SQL Server  (
 5. Run `run.bat` and leave that window open. Check http://localhost:5000/api/Student shows JSON.
 6. Open this folder in VS Code (File > Open Folder) and click **Go Live** in the bottom-right status bar. The page opens at http://127.0.0.1:5500.
 
+### Optional: npm shortcuts
+If you have Node/npm installed, these run the same scripts (Windows only):
+
+| Command | Runs |
+|---|---|
+| `npm run setup` | `setup.bat` |
+| `npm run db:rebuild` | `rebuild-db.bat` |
+| `npm start` (or `npm run dab`) | `run.bat` |
+
+Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y`.
+
 ## Working at home and at school
 **Don't move the database. Move the scripts that rebuild it.**
 - Everything lives in Git: `git add`, `git commit`, `git push` when you leave; `git pull` when you arrive.

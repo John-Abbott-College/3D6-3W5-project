@@ -1,15 +1,15 @@
 // Talks to DAB's REST API. Start DAB with run.bat first.
 const API = "http://localhost:5000/api/Book";
 
-const rows = document.getElementById("Book-rows");
-const form = document.getElementById("Book-form");
+const rows = document.getElementById("book-rows");
+const form = document.getElementById("book-form");
 const statusEl = document.getElementById("status");
 const fields = {
-  id: document.getElementById("BookId"),
+  id: document.getElementById("bookId"),
   englishTitle: document.getElementById("englishTitle"),
   originalTitle: document.getElementById("originalTitle"),
   author: document.getElementById("author"),
-  year: document.getElementById("year"),
+  firstEditionYear: document.getElementById("firstEditionYear"),
 };
 const formTitle = document.getElementById("form-title");
 const saveBtn = document.getElementById("save-btn");
