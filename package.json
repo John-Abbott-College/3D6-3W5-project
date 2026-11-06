@@ -2,11 +2,10 @@
   "name": "3d6-project",
   "version": "1.0.0",
   "private": true,
-  "description": "Starter project: web front end + Data API Builder + SQL Server",
+  "description": "Database project: web front end + Data API Builder + SQL Server",
   "scripts": {
     "setup": "setup.bat",
-    "db:rebuild": "rebuild-db.bat",
-    "dab": "run.bat",
+    "db": "rebuild-db.bat",
     "start": "run.bat"
   }
 }
