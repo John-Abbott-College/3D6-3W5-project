@@ -17,7 +17,7 @@
   },
   "entities": {
     "Student": {
-      "source": { "object": "dbo.Student", "type": "table" },
+      "source": { "object": "dbo.Book", "type": "table" },
       "permissions": [
         { "role": "anonymous", "actions": ["*"] }
       ]

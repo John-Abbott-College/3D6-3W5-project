@@ -2,22 +2,22 @@
 -- Rename StarterDB everywhere (this file, 02_seed.sql, .env) for your own project.
 USE master;
 GO
-IF DB_ID('StarterDB') IS NOT NULL
+IF DB_ID('3D6Project') IS NOT NULL
 BEGIN
-    ALTER DATABASE StarterDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE StarterDB;
+    ALTER DATABASE 3D6Project SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE 3D6Project;
 END
 GO
-CREATE DATABASE StarterDB;
+CREATE DATABASE 3D6Project;
 GO
-USE StarterDB;
+USE 3D6Project;
 GO
 
-CREATE TABLE dbo.Student (
-    StudentId  INT IDENTITY(1,1) PRIMARY KEY,
-    FirstName  NVARCHAR(50)  NOT NULL,
-    LastName   NVARCHAR(50)  NOT NULL,
-    Program    NVARCHAR(100) NULL,
-    Email      NVARCHAR(150) NULL
+CREATE TABLE dbo.Book (
+    BookId INT IDENTITY(1,1) PRIMARY KEY,
+    EnglishTitle VARCHAR(200) NOT NULL,
+    OriginalTitle NVARCHAR(200),
+    Author NVARCHAR(100),
+    FirstEditionYear INT,
 );
 GO

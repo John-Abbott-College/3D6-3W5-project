@@ -1,10 +1,12 @@
-USE StarterDB;
+USE 3D6Project;
 GO
-DELETE FROM dbo.Student;
-DBCC CHECKIDENT ('dbo.Student', RESEED, 0);
+DELETE FROM dbo.Book;
+DBCC CHECKIDENT ('dbo.Book', RESEED, 0);
 GO
-INSERT INTO dbo.Student (FirstName, LastName, Program, Email) VALUES
- (N'Ada',   N'Lovelace', N'Computer Science', N'ada@example.com'),
- (N'Alan',  N'Turing',   N'Computer Science', N'alan@example.com'),
- (N'Grace', N'Hopper',   N'Information Systems', N'grace@example.com');
+INSERT INTO dbo.Book (EnglishTitle, OriginalTitle, Author, FirstEditionYear) VALUES
+("Don Quixote", "El Ingenioso Hidalgo Don Quijote de la Mancha", "Miguel de Cervantes", 1605),
+("The Art of War", "孫子兵法", "Sun Tzu", NULL),
+("On the Origin of Species", NULL, "Charles Darwin", 1859),
+("The Republic", "Πολιτεία", Plato, -375),
+("The Little Prince", "Le Petit Prince", "Antoine de Saint-Exupéry", 1943)
 GO

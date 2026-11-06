@@ -8,27 +8,27 @@
 </head>
 <body>
   <main>
-    <h1>Students</h1>
+    <h1>Books</h1>
     <p id="status" role="status"></p>
 
-    <form id="student-form">
-      <h2 id="form-title">Add a student</h2>
-      <input type="hidden" id="studentId">
-      <label>First name <input id="firstName" required maxlength="50"></label>
-      <label>Last name <input id="lastName" required maxlength="50"></label>
-      <label>Program <input id="program" maxlength="100"></label>
-      <label>Email <input id="email" type="email" maxlength="150"></label>
+    <form id="book-form">
+      <h2 id="form-title">Add a book</h2>
+      <input type="hidden" id="bookId">
+      <label>Title (English)<input id="englishTitle" required maxlength="200"></label>
+      <label>Title (Original if not English) <input id="originalTitle" maxlength="200"></label>
+      <label>Author <input id="author" maxlength="100"></label>
+      <label>Year of 1st edition <input id="firstEditionYear" type="number" min="-5000", max="2026" <!-- yeah bad hardcoding --> ></label>
       <div class="buttons">
-        <button type="submit" id="save-btn">Add student</button>
+        <button type="submit" id="save-btn">Add book</button>
         <button type="button" id="cancel-btn" hidden>Cancel edit</button>
       </div>
     </form>
 
     <table>
       <thead>
-        <tr><th>ID</th><th>Name</th><th>Program</th><th>Email</th><th></th></tr>
+        <tr><th>ID</th><th>Title</th><th>Author</th><th>First Edition</th></tr>
       </thead>
-      <tbody id="student-rows"></tbody>
+      <tbody id="book-rows"></tbody>
     </table>
   </main>
   <script src="app.js"></script>

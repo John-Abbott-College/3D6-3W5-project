@@ -13,6 +13,6 @@ set "PATH=%~dp0.tools\dab-tool;%DOTNET_ROOT%;%PATH%"
 echo Starting DAB on http://localhost:5000  (Ctrl+C to stop)
 echo REST:    http://localhost:5000/api/Student
 echo Swagger: http://localhost:5000/swagger
-echo GraphQL: http://localhost:5000/graphql
+rem echo GraphQL: http://localhost:5000/graphql
 echo.
 dab start --config dab-config.json
