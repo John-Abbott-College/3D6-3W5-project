@@ -62,5 +62,5 @@ if not %errorlevel%==0 (
 echo.
 echo Setup complete. Next:
 echo   1. Edit .env if your SQL Server name is not "localhost"
-echo   2. Run rebuild-db.bat  (or run db\01_schema.sql then db\02_seed.sql in SSMS)
-echo   3. Run run.bat, then open this folder in VS Code and click Go Live
+echo   2. Run `npm run db` (i.e. rebuild-db.bat)  (or run db\01_schema.sql then db\02_seed.sql in SSMS)
+echo   3. Run `npm start` (i.e. run.bat), then open this folder in VS Code and click Go Live
