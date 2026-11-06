@@ -72,9 +72,9 @@ REST cheat sheet (for entity `Student`, key `StudentId`):
 ---
 
 ## Instructor notes
-1. On a machine with the .NET SDK, run `instructor\build-toolchain.bat`. It produces `toolchain.zip` (portable DAB plus the ASP.NET Core 9.0 runtime, x64 Windows) and prints its SHA-256.
+1. On a machine with the .NET SDK, run `instructor\build-toolchain.bat`. It produces `toolchain.zip` (portable DAB plus the ASP.NET Core 10.0 runtime, x64 Windows) and prints its SHA-256.
 2. Upload `toolchain.zip` as a GitHub **Release** asset (no LFS needed) or to a school share.
 3. In `setup.bat`, set `TOOLCHAIN_URL` (and optionally `TOOLCHAIN_SHA256`). If github.com is blocked in the lab, students can instead drop `toolchain.zip` next to `setup.bat`; the script uses it if present.
-4. Check the minimum .NET version in the current DAB docs before building; change `-Channel 9.0` in the build script if it moves.
+4. The build script pins `DAB_VERSION` and `DOTNET_CHANNEL` at the top. DAB 2.x targets .NET 10; if you change the DAB version, make sure the `tools\netNN.0` path in the printed shim matches the channel.
 5. Publish this as a GitHub template repo (or a Classroom assignment) so each student gets a copy.
 6. Lab images must provide SQL Server/LocalDB and SSMS, and students need permission to create databases.

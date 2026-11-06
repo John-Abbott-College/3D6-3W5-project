@@ -15,4 +15,4 @@ echo REST:    http://localhost:5000/api/Student
 echo Swagger: http://localhost:5000/swagger
 rem echo GraphQL: http://localhost:5000/graphql
 echo.
-dab start --config dab-config.json
+call dab start --config dab-config.json

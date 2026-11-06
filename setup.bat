@@ -3,11 +3,11 @@ setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
 rem ===== Instructor: set these once =====
-set "TOOLCHAIN_URL=https://github.com/YOUR-ORG/dab-toolchain/releases/download/v1/toolchain.zip"
-set "TOOLCHAIN_SHA256="
+set "TOOLCHAIN_URL=https://github.com/John-Abbott-College/3D6-project/releases/download/v0.1.0/toolchain.zip"
+set "TOOLCHAIN_SHA256=073446e0a84474925f59f0785204cb85c68e9d5de3caa151d9b361840f7d168b"
 rem ======================================
 
-if exist ".tools\dab-tool\dab.exe" (
+if exist ".tools\dab-tool\dab.cmd" (
   echo Toolchain already installed.
   goto :env
 )
@@ -38,8 +38,8 @@ if defined TOOLCHAIN_SHA256 (
 echo Unpacking...
 if not exist ".tools" mkdir ".tools"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!ZIP!' -DestinationPath '.tools' -Force"
-if not exist ".tools\dab-tool\dab.exe" (
-  echo Unpack failed: .tools\dab-tool\dab.exe not found.
+if not exist ".tools\dab-tool\dab.cmd" (
+  echo Unpack failed: .tools\dab-tool\dab.cmd not found.
   exit /b 1
 )
 
@@ -52,8 +52,9 @@ if not exist ".env" (
 set "DOTNET_ROOT=%~dp0.tools\dab-tool\dotnet"
 set "PATH=%~dp0.tools\dab-tool;%DOTNET_ROOT%;%PATH%"
 echo.
-dab --version
-if errorlevel 1 (
+call dab --version
+rem .NET launcher failures return negative exit codes, so test for "not 0"
+if not %errorlevel%==0 (
   echo DAB did not start. See the Troubleshooting section of README.md.
   exit /b 1
 )
