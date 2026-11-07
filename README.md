@@ -14,11 +14,12 @@ Browser (web/)  --fetch-->  DAB (http://localhost:5000)  --SQL-->  SQL Server  (
 
 ## Initial setup
 1. Clone this repo and open a terminal in its folder.
-2. Run `npm run setup` It downloads the toolchain (DAB + .NET runtime) into `.tools/` and creates `.env`.
-3. Open `.env` and set both `DB_SERVER` and the `Server=` part of `DAB_CONN` for this computer (`localhost`, `localhost\SQLEXPRESS` or `(localdb)\MSSQLLocalDB`).
-4. Run `npm run db` to (re)create the database from `db/*.sql`
-5. Run `npm start` and leave that window open.
-6. Open this folder in VS Code (File > Open Folder) and click **Go Live** in the bottom-right status bar. It will open web/index.html in a browser.
+2. Run `npm install`
+3. Run `npm run setup` It downloads the toolchain (DAB + .NET runtime) into `.tools/` and creates `.env`.
+4. Open `.env` and set both `DB_SERVER` and the `Server=` part of `DAB_CONN` for this computer (`localhost`, `localhost\SQLEXPRESS` or `(localdb)\MSSQLLocalDB`).
+5. Run `npm run db` to (re)create the database from `db/*.sql`
+6. Run `npm start` and leave that window open.
+7. Open this folder in VS Code (File > Open Folder) and click **Go Live** in the bottom-right status bar. It will open web/index.html in a browser.
 
 ### Optional: npm shortcuts
 If you have Node/npm installed, these run the same scripts (Windows only):
