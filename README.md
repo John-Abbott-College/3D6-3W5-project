@@ -21,15 +21,6 @@ Browser (web/)  --fetch-->  DAB (http://localhost:5000)  --SQL-->  SQL Server  (
 6. Run `npm start` and leave that window open.
 7. Open this folder in VS Code (File > Open Folder) and click **Go Live** in the bottom-right status bar. It will open web/index.html in a browser.
 
-### Optional: npm shortcuts
-If you have Node/npm installed, these run the same scripts (Windows only):
-
-| Command | Runs |
-|---|---|
-| `npm run setup` | `setup.bat` |
-| `npm run db:rebuild` | `rebuild-db.bat` |
-| `npm start` (or `npm run dab`) | `run.bat` |
-
 Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y`.
 
 ## Working at home and at school
@@ -60,24 +51,6 @@ Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y
 DAB exposes what are called [REST](https://www.geeksforgeeks.org/node-js/rest-api-introduction/) endpoints for your database tables. To understand the endpoints that you can use, view the generated Swagger documentation by opening this in your browser:
 http://localhost:5000/swagger
 
-REST also supports `?$filter=`, `$orderby` and `$first`.
-
-REST cheat sheet (for entity `Book`, key `BookId`):
-
-| Action | Request |
-|---|---|
-| List | `GET /api/Book` |
-| One | `GET /api/Book/BookId/2` |
-| Create | `POST /api/Book` with JSON body |
-| Update | `PATCH /api/Book/BookId/2` with the changed fields |
-| Delete | `DELETE /api/Book/BookId/2` |
-
-## Ideas to extend
-- Add a second table (e.g. `Authors`) and a foreign key; show both on the page.
-- Sort and filter the list with `?$orderby=` and `?$filter=`.
-- Validate input and show friendly error messages.
-- Use a stored procedure or view (views need `key-fields` in the config).
-- Restrict permissions: make an entity read-only (`"actions": ["read"]`).
 
 ## Troubleshooting
 - **`DAB did not start` / runtime errors:** `.tools\dab-tool\dotnet` must exist. Delete `.tools/` and run `setup.bat` again.
