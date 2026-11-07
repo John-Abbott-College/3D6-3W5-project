@@ -23,6 +23,10 @@ Browser (web/)  --fetch-->  DAB (http://localhost:5000)  --SQL-->  SQL Server  (
 
 Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y`.
 
+## HTTP access to your database
+DAB exposes what are called [REST](https://www.geeksforgeeks.org/node-js/rest-api-introduction/) endpoints for your database tables. To understand the endpoints that you can use for your specific database tables, open this in your browser after doing the npm start:
+http://localhost:5000/swagger
+
 ## Working at home and at school
 **Don't move the database. Move the scripts that rebuild it.**
 - Adopt the mentality: *If it's not in Git, it doesn't exist*
@@ -39,7 +43,7 @@ Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y
 | `dab-config.json` | Tells DAB which database tables to expose and who may use them |
 | `web/` | Your front end: `index.html`, `app.js`, `style.css` etc. |
 | `.env` | This computer's connection string (git-ignored) |
-| `setup.bat` / `run.bat` / `rebuild-db.bat` | Helper scripts. You can run them directlt, or via the npm commands. |
+| `setup.bat` / `run.bat` / `rebuild-db.bat` | Helper scripts. You can run them directly, or via the npm commands. |
 | `.vscode/` | Live Server settings (port 5500, serves `web/`) |
 
 ## Exposing a new table
@@ -47,9 +51,7 @@ Press Ctrl+C to stop DAB; Windows may ask "Terminate batch job (Y/N)?" Answer `Y
 2. Add an entry under `"entities"` in `dab-config.json`, copying the `dbo.Book` one. You can remove dbo.Book when you no longer need that as an example.
 3. Restart `npm start`. The table is at `http://localhost:5000/api/<EntityName>`.
 
-## HTTP access to your database
-DAB exposes what are called [REST](https://www.geeksforgeeks.org/node-js/rest-api-introduction/) endpoints for your database tables. To understand the endpoints that you can use, view the generated Swagger documentation by opening this in your browser:
-http://localhost:5000/swagger
+
 
 
 ## Troubleshooting
