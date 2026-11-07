@@ -7,15 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
+  <header>
     <h1>Books and authors</h1>
     <p id="status" role="status"></p>
+  </header>
 
-    <section>
-      <h2>Books</h2>
+  <main>
+    <section aria-labelledby="books-heading">
+      <h2 id="books-heading">Books</h2>
       <form id="book-form">
         <h3 id="book-form-title">Add a book</h3>
         <input type="hidden" id="bookId">
+        <input type="hidden" id="coverImageId">
         <label>Title (English) <input id="englishTitle" required maxlength="200"></label>
         <label>Title (original, if not English) <input id="originalTitle" maxlength="200"></label>
         <label>Author
@@ -24,14 +27,20 @@
           </select>
         </label>
         <label>Year of 1st edition <input id="firstEditionYear" type="number" min="-5000"></label>
+
         <div class="cover-field">
-          <input type="hidden" id="coverImageId">
           <label>Cover image (max 10 MB)
             <input id="coverFile" type="file" accept="image/*">
           </label>
-          <img id="coverPreview" alt="Book cover preview" hidden>
-          <button type="button" id="cover-remove-btn" hidden>Remove cover</button>
+          <figure id="cover-figure" hidden>
+            <img id="coverPreview" alt="Book cover preview">
+            <figcaption>
+              Cover preview
+              <button type="button" id="cover-remove-btn">Remove cover</button>
+            </figcaption>
+          </figure>
         </div>
+
         <div class="buttons">
           <button type="submit" id="book-save-btn">Add book</button>
           <button type="button" id="book-cancel-btn" hidden>Cancel edit</button>
@@ -40,14 +49,21 @@
 
       <table>
         <thead>
-          <tr><th>ID</th><th>Cover</th><th>Title</th><th>Author</th><th>First edition</th><th></th></tr>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Cover</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">First edition</th>
+            <th scope="col">Actions</th>
+          </tr>
         </thead>
         <tbody id="book-rows"></tbody>
       </table>
     </section>
 
-    <section>
-      <h2>Authors</h2>
+    <section aria-labelledby="authors-heading">
+      <h2 id="authors-heading">Authors</h2>
       <form id="author-form">
         <h3 id="author-form-title">Add an author</h3>
         <input type="hidden" id="editAuthorId">
@@ -60,12 +76,17 @@
 
       <table>
         <thead>
-          <tr><th>ID</th><th>Name</th><th></th></tr>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+          </tr>
         </thead>
         <tbody id="author-rows"></tbody>
       </table>
     </section>
   </main>
+
   <script src="app.js"></script>
 </body>
 </html>
