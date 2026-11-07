@@ -24,6 +24,14 @@
           </select>
         </label>
         <label>Year of 1st edition <input id="firstEditionYear" type="number" min="-5000"></label>
+        <div class="cover-field">
+          <input type="hidden" id="coverImageId">
+          <label>Cover image (max 10 MB)
+            <input id="coverFile" type="file" accept="image/*">
+          </label>
+          <img id="coverPreview" alt="Book cover preview" hidden>
+          <button type="button" id="cover-remove-btn" hidden>Remove cover</button>
+        </div>
         <div class="buttons">
           <button type="submit" id="book-save-btn">Add book</button>
           <button type="button" id="book-cancel-btn" hidden>Cancel edit</button>
@@ -32,7 +40,7 @@
 
       <table>
         <thead>
-          <tr><th>ID</th><th>Title</th><th>Author</th><th>First edition</th><th></th></tr>
+          <tr><th>ID</th><th>Cover</th><th>Title</th><th>Author</th><th>First edition</th><th></th></tr>
         </thead>
         <tbody id="book-rows"></tbody>
       </table>

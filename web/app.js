@@ -3,6 +3,8 @@ const API_ROOT = "http://localhost:5000/api";
 const BOOK_URL = API_ROOT + "/Book";                  // table: create, update, delete
 const BOOK_DETAILS_URL = API_ROOT + "/BookDetails";   // view (JOIN with Author): read-only list
 const AUTHOR_URL = API_ROOT + "/Author";              // table: create, read, update, delete
+const FILES_URL = "http://localhost:3000/files";      // file-store service: book cover images
+const MAX_COVER_BYTES = 10 * 1024 * 1024;             // the file store refuses anything bigger
 
 const statusEl = document.getElementById("status");
 
@@ -18,7 +20,13 @@ const bookFields = {
   originalTitle: document.getElementById("originalTitle"),
   authorId: document.getElementById("authorId"),            // <select> of existing authors
   firstEditionYear: document.getElementById("firstEditionYear"),
+  coverImageId: document.getElementById("coverImageId"),    // hidden: UUID of the saved cover, if any
+  coverFile: document.getElementById("coverFile"),          // <input type="file"> for a new cover
 };
+const coverPreview = document.getElementById("coverPreview");
+const coverRemoveBtn = document.getElementById("cover-remove-btn");
+let coverRemoved = false;   // true once "Remove cover" was clicked on a saved cover
+let previewUrl = null;      // object URL for a newly chosen (not yet uploaded) image
 bookFields.firstEditionYear.max = new Date().getFullYear(); // no hard-coded year
 
 // ---- Author form and table ----
@@ -87,6 +95,73 @@ function button(label, onClick) {
 function actionsCell(onEdit, onDelete) {
   const td = document.createElement("td");
   td.append(button("Edit", onEdit), " ", button("Delete", onDelete));
+  return td;
+}
+
+// ---- Cover images (file-store service) ----
+function coverUrl(id) {
+  return FILES_URL + "/" + id;   // works directly as an <img src>; no JavaScript fetch needed
+}
+
+// Uploads the image as the raw request body and returns the UUID the file store assigns.
+async function uploadCover(file) {
+  let res;
+  try {
+    res = await fetch(FILES_URL + "?filename=" + encodeURIComponent(file.name), {
+      method: "POST",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+  } catch {
+    throw new Error("Can't reach the file store at " + FILES_URL + ". Is it running (npm start)?");
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error("File store returned " + res.status + ": " + (body.error ?? res.statusText));
+  }
+  return (await res.json()).id;
+}
+
+// Best effort: an orphaned image is harmless, so a failure here never blocks the user.
+async function deleteCover(id) {
+  if (!id) return;
+  try {
+    await fetch(FILES_URL + "/" + id, { method: "DELETE" });
+  } catch {
+    /* file store not running: leave the file behind */
+  }
+}
+
+// Shows the newly chosen image if there is one, otherwise the saved cover, otherwise nothing.
+function showCoverPreview() {
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+  }
+  const file = bookFields.coverFile.files[0];
+  const savedId = coverRemoved ? "" : bookFields.coverImageId.value;
+  if (file) {
+    previewUrl = URL.createObjectURL(file);
+    coverPreview.src = previewUrl;
+  } else if (savedId) {
+    coverPreview.src = coverUrl(savedId);
+  } else {
+    coverPreview.removeAttribute("src");
+  }
+  coverPreview.hidden = !(file || savedId);
+  coverRemoveBtn.hidden = !(file || savedId);
+}
+
+function coverCell(id, title) {
+  const td = document.createElement("td");
+  if (id) {
+    const img = document.createElement("img");
+    img.className = "thumb";
+    img.src = coverUrl(id);
+    img.alt = "Cover of " + title;
+    img.loading = "lazy";
+    td.append(img);
+  }
   return td;
 }
 
@@ -200,6 +275,7 @@ function renderBookRows(books) {
     const tr = document.createElement("tr");
     tr.append(
       cell(b.BookId),
+      coverCell(b.CoverImageId, title),
       cell(title),
       cell(b.AuthorName ?? "(unknown)"),     // name comes from the JOIN in the view
       cell(b.FirstEditionYear ?? "(unknown)"),
@@ -215,6 +291,10 @@ function startBookEdit(b) {
   bookFields.originalTitle.value = b.OriginalTitle ?? "";
   bookFields.authorId.value = b.AuthorId ?? "";     // the view must include AuthorId
   bookFields.firstEditionYear.value = b.FirstEditionYear ?? "";
+  bookFields.coverImageId.value = b.CoverImageId ?? "";   // the view must include CoverImageId
+  bookFields.coverFile.value = "";
+  coverRemoved = false;
+  showCoverPreview();
 
   bookFormTitle.textContent = "Edit book " + b.BookId;
   bookSaveBtn.textContent = "Save changes";
@@ -225,6 +305,9 @@ function startBookEdit(b) {
 function resetBookForm() {
   bookForm.reset();
   bookFields.id.value = "";
+  bookFields.coverImageId.value = "";
+  coverRemoved = false;
+  showCoverPreview();
   bookFormTitle.textContent = "Add a book";
   bookSaveBtn.textContent = "Add book";
   bookCancelBtn.hidden = true;
@@ -234,6 +317,7 @@ async function deleteBook(b) {
   if (!confirm("Delete " + b.EnglishTitle + "?")) return;
   try {
     await api(BOOK_URL + "/BookId/" + b.BookId, { method: "DELETE" });
+    await deleteCover(b.CoverImageId);   // the row is gone, so its image can go too
     await refreshAll();
   } catch (err) {
     setStatus(err.message, true);
@@ -249,13 +333,56 @@ bookForm.addEventListener("submit", async (e) => {
     FirstEditionYear: numberOrNull(bookFields.firstEditionYear.value),
   };
   const id = bookFields.id.value;
+  const oldCoverId = bookFields.coverImageId.value || null;
+  const file = bookFields.coverFile.files[0];
+  let newCoverId = null;
   try {
-    await sendJson(id ? BOOK_URL + "/BookId/" + id : BOOK_URL, id ? "PATCH" : "POST", book);
+    // 1. Store the image first, so a book row only ever points at a file that exists.
+    if (file) {
+      newCoverId = await uploadCover(file);
+      book.CoverImageId = newCoverId;
+    } else if (coverRemoved) {
+      book.CoverImageId = null;
+    }   // otherwise leave CoverImageId out: PATCH keeps the old value, POST leaves it NULL
+
+    // 2. Save the book row.
+    try {
+      await sendJson(id ? BOOK_URL + "/BookId/" + id : BOOK_URL, id ? "PATCH" : "POST", book);
+    } catch (err) {
+      await deleteCover(newCoverId);   // don't leave the new upload orphaned
+      throw err;
+    }
+
+    // 3. The previous image is no longer referenced, so remove it.
+    if (file || coverRemoved) await deleteCover(oldCoverId);
+
     resetBookForm();
     await refreshAll();
   } catch (err) {
     setStatus(err.message, true);
   }
+});
+
+bookFields.coverFile.addEventListener("change", () => {
+  const file = bookFields.coverFile.files[0];
+  if (file && !file.type.startsWith("image/")) {
+    bookFields.coverFile.value = "";
+    setStatus("Please choose an image file.", true);
+  } else if (file && file.size > MAX_COVER_BYTES) {
+    bookFields.coverFile.value = "";
+    setStatus("That image is over 10 MB. Please choose a smaller one.", true);
+  }
+  showCoverPreview();
+});
+
+coverRemoveBtn.addEventListener("click", () => {
+  if (bookFields.coverFile.value) {
+    bookFields.coverFile.value = "";   // discard the newly chosen image
+  } else {
+    coverRemoved = true;               // remove the saved cover when the book is saved
+    setStatus("The cover will be removed when you save.");
+  }
+  showCoverPreview();
 });
 
 bookCancelBtn.addEventListener("click", resetBookForm);

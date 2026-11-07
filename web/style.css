@@ -45,3 +45,9 @@ button[type="submit"] { background: var(--accent); border-color: var(--accent); 
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); }
 th { font-weight: 600; color: var(--muted); font-size: .9rem; }
+
+/* Book cover image: upload field + preview in the form, thumbnail in the table */
+.cover-field { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
+.cover-field label { flex: 1 1 14rem; }
+#coverPreview { max-height: 10rem; max-width: 8rem; border: 1px solid var(--line); border-radius: 4px; }
+img.thumb { height: 3rem; width: auto; border-radius: 3px; display: block; }

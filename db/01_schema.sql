@@ -28,6 +28,9 @@ CREATE TABLE dbo.Book (
     OriginalTitle NVARCHAR(200),
     AuthorId INT,
     FirstEditionYear INT,
+    -- UUID of the cover image held by the file-store service (file-store/server.js).
+    -- NULL = no cover. No foreign key is possible: the file lives outside the database.
+    CoverImageId UNIQUEIDENTIFIER NULL,
     FOREIGN KEY (AuthorId) REFERENCES dbo.Author(AuthorId)
 );
 GO
