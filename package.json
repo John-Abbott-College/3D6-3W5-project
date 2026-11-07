@@ -5,7 +5,12 @@
   "description": "Database project: web front end + Data API Builder + SQL Server",
   "scripts": {
     "setup": "setup.bat",
-    "db": "rebuild-db.bat",
-    "start": "run.bat"
+    "sql": "rebuild-db.bat",
+    "start": "concurrently -k -n DAB,FILES \"run.bat\" \"node file-store/server.js\"",
+    "dab": "run.bat",
+    "fs": "node file-store/server.js"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
   }
 }

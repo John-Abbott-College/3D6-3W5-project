@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Store</title>
+<style>
+  :root { color-scheme: light dark; --border: #8884; --accent: #2563eb; --danger: #dc2626; }
+  body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; }
+  h1 { margin-top: 0; }
+  #drop { border: 2px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; }
+  #drop.over { border-color: var(--accent); background: #2563eb14; }
+  button { font: inherit; padding: .35rem .8rem; border: 1px solid var(--border); border-radius: 6px;
+           background: transparent; color: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.del:hover { border-color: var(--danger); color: var(--danger); }
+  #msg { min-height: 1.4rem; margin: .75rem 0; }
+  #msg.error { color: var(--danger); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  td.num { text-align: right; white-space: nowrap; }
+  img.thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; display: block; }
+  .id { font: .8rem ui-monospace, monospace; opacity: .65; }
+  .empty { opacity: .65; padding: 1rem .5rem; }
+</style>
+</head>
+<body>
+  <h1>File Store</h1>
+
+  <div id="drop">
+    <p>Drop files here or <button id="pick" type="button">choose files</button> (max 10 MB each)</p>
+    <input id="file" type="file" multiple hidden>
+  </div>
+  <div id="msg" role="status"></div>
+
+  <table>
+    <thead>
+      <tr><th></th><th>Name</th><th>Type</th><th class="num">Size</th><th>Uploaded</th><th></th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+<script>
+const API = "http://localhost:3000";   // change if the server runs elsewhere
+const MAX_BYTES = 10 * 1024 * 1024;
+
+const $ = (id) => document.getElementById(id);
+const rows = $("rows"), msg = $("msg"), drop = $("drop"), input = $("file");
+
+function say(text, isError = false) {
+  msg.textContent = text;
+  msg.className = isError ? "error" : "";
+}
+
+function fmtSize(n) {
+  if (n < 1024) return n + " B";
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+  return (n / 1024 / 1024).toFixed(2) + " MB";
+}
+
+function el(tag, props = {}, ...children) {
+  const e = Object.assign(document.createElement(tag), props);
+  e.append(...children);
+  return e;
+}
+
+async function loadList() {
+  try {
+    const res = await fetch(`${API}/files`);
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    render(await res.json());
+  } catch (err) {
+    rows.replaceChildren();
+    say(`Can’t reach the file server at ${API}. Is it running? (${err.message})`, true);
+  }
+}
+
+function render(files) {
+  rows.replaceChildren();
+  if (!files.length) {
+    rows.append(el("tr", {}, el("td", { colSpan: 6, className: "empty", textContent: "No files stored yet." })));
+    return;
+  }
+  for (const f of files) {
+    const url = API + f.url;
+    const thumb = f.contentType.startsWith("image/")
+      ? el("img", { className: "thumb", src: url, alt: "" })
+      : "";
+    const name = el("a", { href: url, target: "_blank", rel: "noopener", textContent: f.filename || "(unnamed)" });
+    const del = el("button", { className: "del", type: "button", textContent: "Delete" });
+    del.addEventListener("click", () => remove(f));
+
+    rows.append(el("tr", {},
+      el("td", {}, thumb),
+      el("td", {}, name, el("div", { className: "id", textContent: f.id })),
+      el("td", { textContent: f.contentType }),
+      el("td", { className: "num", textContent: fmtSize(f.size) }),
+      el("td", { textContent: new Date(f.createdAt).toLocaleString() }),
+      el("td", {}, del)
+    ));
+  }
+}
+
+async function uploadFiles(fileList) {
+  const files = [...fileList];
+  let ok = 0;
+  for (const file of files) {
+    if (file.size > MAX_BYTES) { say(`${file.name} is over 10 MB and was skipped.`, true); continue; }
+    if (file.size === 0)       { say(`${file.name} is empty and was skipped.`, true); continue; }
+    say(`Uploading ${file.name}…`);
+    try {
+      const res = await fetch(`${API}/files?filename=${encodeURIComponent(file.name)}`, {
+        method: "POST",
+        headers: { "Content-Type": file.type || "application/octet-stream" },
+        body: file,
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `HTTP ${res.status}`);
+      ok++;
+    } catch (err) {
+      say(`Upload of ${file.name} failed: ${err.message}`, true);
+    }
+  }
+  if (ok) say(`Uploaded ${ok} file${ok > 1 ? "s" : ""}.`);
+  input.value = "";
+  loadList();
+}
+
+async function remove(f) {
+  if (!confirm(`Delete ${f.filename || f.id}?`)) return;
+  try {
+    const res = await fetch(`${API}/files/${f.id}`, { method: "DELETE" });
+    if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
+    say("Deleted.");
+  } catch (err) {
+    say(`Delete failed: ${err.message}`, true);
+  }
+  loadList();
+}
+
+$("pick").addEventListener("click", () => input.click());
+input.addEventListener("change", () => input.files.length && uploadFiles(input.files));
+
+for (const type of ["dragenter", "dragover"])
+  drop.addEventListener(type, (e) => { e.preventDefault(); drop.classList.add("over"); });
+for (const type of ["dragleave", "drop"])
+  drop.addEventListener(type, (e) => { e.preventDefault(); drop.classList.remove("over"); });
+drop.addEventListener("drop", (e) => e.dataTransfer.files.length && uploadFiles(e.dataTransfer.files));
+
+loadList();
+</script>
+</body>
+</html>

@@ -1,4 +1,7 @@
+package-lock.json
+node_modules
 build/
+file-store/data
 .env
 .tools/
 instructor/dab-starter.zip
