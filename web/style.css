@@ -18,7 +18,8 @@
 body { margin: 0; }
 main { max-width: 52rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 h1 { margin: 0 0 .25rem; }
-h2 { font-size: 1.1rem; margin: 0 0 .75rem; }
+h2 { font-size: 1.35rem; margin: 2.25rem 0 .75rem; }
+h3 { font-size: 1.1rem; margin: 0 0 .75rem; }
 #status { color: var(--muted); min-height: 1.5em; margin: 0 0 1rem; }
 #status.error { color: var(--danger); }
 
@@ -26,12 +27,14 @@ form {
   display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   padding: 1rem; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 1.5rem;
 }
-form h2, form .buttons { grid-column: 1 / -1; }
+form h3, form .buttons { grid-column: 1 / -1; }
+.buttons { display: flex; gap: .5rem; }
 label { display: grid; gap: .25rem; font-size: .9rem; color: var(--muted); }
-input {
+input, select {
   font: inherit; padding: .4rem .5rem; color: var(--text); background: transparent;
   border: 1px solid var(--line); border-radius: 4px;
 }
+select option { color: #1c1f23; background: #fff; }
 button {
   font: inherit; padding: .4rem .8rem; cursor: pointer;
   color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 4px;
@@ -39,7 +42,6 @@ button {
 button[type="submit"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.table-wrap, table { width: 100%; }
-table { border-collapse: collapse; }
+table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); }
 th { font-weight: 600; color: var(--muted); font-size: .9rem; }

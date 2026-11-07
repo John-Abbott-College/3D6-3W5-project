@@ -3,33 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Books</title>
+  <title>Books and authors</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
-    <h1>Books</h1>
+    <h1>Books and authors</h1>
     <p id="status" role="status"></p>
 
-    <form id="book-form">
-      <h2 id="form-title">Add a book</h2>
-      <input type="hidden" id="bookId">
-      <label>Title (English)<input id="englishTitle" required maxlength="200"></label>
-      <label>Title (Original if not English) <input id="originalTitle" maxlength="200"></label>
-      <label>Author <input id="author" maxlength="100"></label>
-      <label>Year of 1st edition <input id="firstEditionYear" type="number" min="-5000", max="2026" <!-- yeah bad hardcoding --></label>
-      <div class="buttons">
-        <button type="submit" id="save-btn">Add book</button>
-        <button type="button" id="cancel-btn" hidden>Cancel edit</button>
-      </div>
-    </form>
+    <section>
+      <h2>Books</h2>
+      <form id="book-form">
+        <h3 id="book-form-title">Add a book</h3>
+        <input type="hidden" id="bookId">
+        <label>Title (English) <input id="englishTitle" required maxlength="200"></label>
+        <label>Title (original, if not English) <input id="originalTitle" maxlength="200"></label>
+        <label>Author
+          <select id="authorId" required>
+            <option value="">Select an author</option>
+          </select>
+        </label>
+        <label>Year of 1st edition <input id="firstEditionYear" type="number" min="-5000"></label>
+        <div class="buttons">
+          <button type="submit" id="book-save-btn">Add book</button>
+          <button type="button" id="book-cancel-btn" hidden>Cancel edit</button>
+        </div>
+      </form>
 
-    <table>
-      <thead>
-        <tr><th>ID</th><th>Title</th><th>Author</th><th>First Edition</th></tr>
-      </thead>
-      <tbody id="book-rows"></tbody>
-    </table>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Title</th><th>Author</th><th>First edition</th><th></th></tr>
+        </thead>
+        <tbody id="book-rows"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Authors</h2>
+      <form id="author-form">
+        <h3 id="author-form-title">Add an author</h3>
+        <input type="hidden" id="editAuthorId">
+        <label>Name <input id="authorName" required maxlength="100"></label>
+        <div class="buttons">
+          <button type="submit" id="author-save-btn">Add author</button>
+          <button type="button" id="author-cancel-btn" hidden>Cancel edit</button>
+        </div>
+      </form>
+
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th></th></tr>
+        </thead>
+        <tbody id="author-rows"></tbody>
+      </table>
+    </section>
   </main>
   <script src="app.js"></script>
 </body>

@@ -16,11 +16,25 @@
     }
   },
   "entities": {
+    "Author": {
+      "source": { "object": "dbo.Author", "type": "table" },
+      "permissions": [
+        { "role": "anonymous", "actions": ["*"] }
+      ]
+    },
     "Book": {
       "source": { "object": "dbo.Book", "type": "table" },
       "permissions": [
         { "role": "anonymous", "actions": ["*"] }
       ]
+    },
+    "BookDetails": {
+      "source": {
+        "object": "dbo.BookDetails",
+        "type": "view",
+        "key-fields": ["BookId"]
+      },
+      "permissions": [{ "role": "anonymous", "actions": ["read"] }]
     }
   }
 }
