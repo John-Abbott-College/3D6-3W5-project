@@ -17,7 +17,7 @@ Browser (web/)  --fetch-->  DAB (http://localhost:5000)  --SQL-->  SQL Server  (
 2. Run `npm install`
 3. Run `npm run setup` It downloads the toolchain (DAB + .NET runtime) into `.tools/` and creates `.env`.
 4. Open `.env` and set both `DB_SERVER` and the `Server=` part of `DAB_CONN` for this computer (`localhost`, `localhost\SQLEXPRESS` or `(localdb)\MSSQLLocalDB`).
-5. Run `npm run db` to (re)create the database from `db/*.sql`
+5. Run `npm run sql` to (re)create the database from `db/*.sql`
 6. Run `npm start` and leave that window open.
 7. Open this folder in VS Code (File > Open Folder) and click **Go Live** in the bottom-right status bar. It will open web/index.html in a browser.
 
