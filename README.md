@@ -67,6 +67,6 @@ http://localhost:3000/files/<UUID>
 - **`DAB did not start` / runtime errors:** `.tools/dab-tool/dotnet` must exist. Delete `.tools/` and run `npm run setup` again.
 - **Login failed / cannot connect:** `DB_SERVER` and `Server=` in `config/.env` must match your SQL Server name. Check the instance name in SSMS's connection dialog.
 - **Certificate error:** keep `TrustServerCertificate=True` in `DAB_CONN`.
-- **Page says it can't reach DAB:** `run.bat` must be running, and the page must be opened with Live Server (**Go Live**), not by double-clicking the file. If Live Server picks a different port, set `liveServer.settings.port` back to 5500, or add that origin to `cors.origins` in `config/dab-config.json`.
+- **Page says it can't reach DAB:** DAB must be running, and the page must be opened with Live Server (**Go Live**), not by double-clicking the file. If Live Server picks a different port, set `liveServer.settings.port` back to 5500, or add that origin to `cors.origins` in `config/dab-config.json`. Try `npm start` again.
 - **Port 5000 busy:** close the other program, or start DAB with a different port and update `API` in `web/app.js` and the CORS origin if needed.
 - **Table not found / 404:** the entity name in the URL is case-sensitive and must match `config/dab-config.json`.
