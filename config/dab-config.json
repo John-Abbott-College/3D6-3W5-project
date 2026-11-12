@@ -16,6 +16,12 @@
     }
   },
   "entities": {
+    "StoredFile": {
+      "source": { "object": "dbo.StoredFile", "type": "table" },
+      "permissions": [
+        { "role": "anonymous", "actions": ["create", "read", "delete"] }
+      ]
+    },
     "Author": {
       "source": { "object": "dbo.Author", "type": "table" },
       "permissions": [

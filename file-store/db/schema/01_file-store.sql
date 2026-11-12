@@ -5,12 +5,7 @@
 -- Run it in the database that DAB connects to (the Database= part of DAB_CONN).
 -- This script uses a dedicated database named FileStore; to use a different one,
 -- change the name below and in your connection string.
-USE master;
-GO
-IF DB_ID('FileStore') IS NULL
-    CREATE DATABASE FileStore;
-GO
-USE FileStore;
+USE Project3D63W5;
 GO
 
 -- Not named "File": FILE is a reserved word in T-SQL.

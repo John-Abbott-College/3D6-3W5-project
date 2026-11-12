@@ -56,7 +56,7 @@ async function api(url, options) {
   try {
     res = await fetch(url, options);
   } catch {
-    throw new Error("Can't reach DAB at " + url + ". Is run.bat running?");
+    throw new Error("Can't reach DAB at " + url);
   }
   if (!res.ok) {
     const body = await res.text();
